@@ -19,7 +19,9 @@ class OneTimeRequestWorker(context: Context, params: WorkerParameters) : Worker(
 
     }
 
-    // Method to create output data
+    /**
+     * Method to create output data
+     */
     private fun createOutputData(): Data {
 
         // Return actual data

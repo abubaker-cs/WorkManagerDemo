@@ -55,6 +55,11 @@ class MainActivity : AppCompatActivity() {
                 // 2. Internet is Connected
                 .setRequiredNetworkType(NetworkType.CONNECTED)
 
+                // 3. Verify if the Batter is not on the low level (Must be > 20%)
+                // Lower then < 20% - Task will be enqueued
+                // Greater then > 20% - Task will be successful
+                .setRequiresBatteryNotLow(true)
+
                 // Due to our two defined constraints, this request will only work if those requirements are met.
                 .build()
 
