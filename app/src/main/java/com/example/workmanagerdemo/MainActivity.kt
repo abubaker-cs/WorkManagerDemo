@@ -205,7 +205,7 @@ class MainActivity : AppCompatActivity() {
              *
              * You can also set the TimeUnit as per your requirement. for example SECONDS, MINUTES, or HOURS.
              */
-            // setting period to 15 Minutes
+            // setting period to >>>> 15 Minutes
             val periodicWorkRequest =
                 PeriodicWorkRequest.Builder(PeriodicRequestWorker::class.java, 15, TimeUnit.MINUTES)
                     .setConstraints(periodicRequestConstraints)
@@ -218,6 +218,7 @@ class MainActivity : AppCompatActivity() {
                 ExistingPeriodicWorkPolicy.KEEP,
                 periodicWorkRequest
             )
+
         }
     }
 

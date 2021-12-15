@@ -13,11 +13,15 @@ class PeriodicRequestWorker(context: Context, params: WorkerParameters) : Worker
 
     override fun doWork(): Result {
 
-        // Print the date in log when the function is called.
+        // Get the current date in milliseconds.
         val date = getDate(System.currentTimeMillis())
+
+        // Print the date in log when the function is called.
         Log.i("Periodic WorkRequest", "doWork Execution DateTime: $date")
 
+        // Return result, without passing anything as it is optional as we recently did in the OneTimeRequestWorker.kt
         return Result.success()
+
     }
 
     /**
@@ -32,7 +36,11 @@ class PeriodicRequestWorker(context: Context, params: WorkerParameters) : Worker
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         val calendar = Calendar.getInstance()
+
+        //
         calendar.timeInMillis = milliSeconds
+
+        //
         return formatter.format(calendar.time)
 
     }
