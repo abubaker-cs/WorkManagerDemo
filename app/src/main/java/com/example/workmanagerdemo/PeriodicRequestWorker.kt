@@ -22,7 +22,7 @@ class PeriodicRequestWorker(context: Context, params: WorkerParameters) : Worker
         // END
     }
 
-    // reate a function to get the date from the Milliseconds.
+    // Create a function to get the date from the Milliseconds.
     /**
      * A function to get the date from the Milliseconds.
      *

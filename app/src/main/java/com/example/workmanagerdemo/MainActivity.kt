@@ -3,7 +3,6 @@ package com.example.workmanagerdemo
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.work.*
 import androidx.work.WorkInfo.*
 import com.example.workmanagerdemo.databinding.ActivityMainBinding
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
              * A specification of the requirements that need to be met before a WorkRequest can run.  By
              * default, WorkRequests do not have any requirements and can run immediately.  By adding
              * requirements, you can make sure that work only runs in certain situations - for example, when you
-             * have an unmetered network and are charging.
+             * have an un-metered network and are charging.
              */
             val oneTimeRequestConstraints = Constraints.Builder()
 
@@ -59,7 +58,6 @@ class MainActivity : AppCompatActivity() {
             val data = Data.Builder()
             data.putString("inputKey", "Input Value")
 
-            // Create an one time work request
             /**
              * A WorkRequest for non-repeating work.
              * OneTimeWorkRequests can be put in simple or complex graphs of work by using methods.
@@ -70,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                  * Adds input Data to the work.  If a worker has prerequisites in its chain, this
                  * Data will be merged with the outputs of the prerequisites using an InputMerger.
                  *
-                 * @param inputData key/value pairs that will be provided to the worker
+                 * @param - key/value pairs that will be provided to the worker
                  */
                 .setInputData(data.build())
                 /**
@@ -85,22 +83,25 @@ class MainActivity : AppCompatActivity() {
 
             // Gets a LiveData of the WorkInfo for a given work id.
             WorkManager.getInstance(this@MainActivity).getWorkInfoByIdLiveData(sampleWork.id)
-                .observe(this, Observer { workInfo ->
+                .observe(this, { workInfo ->
+
                     OneTimeRequestWorker.Companion.logger(workInfo.state.name)
+
+                    //
                     if (workInfo != null) {
                         when (workInfo.state) {
                             State.ENQUEUED -> {
                                 // Show the work state in text view
-                                binding.tvOneTimeRequest.text = "Task enqueued."
+                                binding.tvOneTimeRequest.text = getString(R.string.task_enqueued)
                             }
                             State.BLOCKED -> {
-                                binding.tvOneTimeRequest.text = "Task blocked."
+                                binding.tvOneTimeRequest.text = getString(R.string.task_blocked)
                             }
                             State.RUNNING -> {
-                                binding.tvOneTimeRequest.text = "Task running."
+                                binding.tvOneTimeRequest.text = getString(R.string.task_running)
                             }
                             else -> {
-                                binding.tvOneTimeRequest.text = "Task state else part."
+                                binding.tvOneTimeRequest.text = getString(R.string.task_default)
                             }
                         }
                     }
@@ -109,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                     if (workInfo != null && workInfo.state.isFinished) {
                         when (workInfo.state) {
                             State.SUCCEEDED -> {
-                                binding.tvOneTimeRequest.text = "Task successful."
+                                binding.tvOneTimeRequest.text = getString(R.string.task_succeeded)
 
                                 // Get the output data
                                 val successOutputData = workInfo.outputData
@@ -117,21 +118,21 @@ class MainActivity : AppCompatActivity() {
                                 Log.i("Worker Output", "$outputText")
                             }
                             State.FAILED -> {
-                                binding.tvOneTimeRequest.text = "Task Failed."
+                                binding.tvOneTimeRequest.text = getString(R.string.task_failed)
                             }
                             State.CANCELLED -> {
-                                binding.tvOneTimeRequest.text = "Task cancelled."
+                                binding.tvOneTimeRequest.text = getString(R.string.task_cancelled)
                             }
                             else -> {
-                                binding.tvOneTimeRequest.text = "Task state isFinished else part."
+                                binding.tvOneTimeRequest.text =
+                                    getString(R.string.task_default_finished)
                             }
                         }
                     }
                 })
         }
 
-        // Event: Preodic R
-// TODO Step 5: Assign the click even for Periodic Work Request. And Enqueue the worker class.,
+        // Periodic Work Request
         binding.btnPeriodicRequest.setOnClickListener {
 
             /**
@@ -140,7 +141,7 @@ class MainActivity : AppCompatActivity() {
              * A specification of the requirements that need to be met before a WorkRequest can run.
              * By default, WorkRequests do not have any requirements and can run immediately.
              * By adding requirements, you can make sure that work only runs in certain situations
-             * - for example, when you have an unmetered network and are charging.
+             * - for example, when you have an un-metered network and are charging.
              */
             // For more details visit the link https://medium.com/androiddevelopers/introducing-workmanager-2083bcfc4712
             val periodicRequestConstraints = Constraints.Builder()

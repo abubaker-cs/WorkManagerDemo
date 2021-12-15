@@ -2,4 +2,12 @@
     <string name="app_name">WorkManagerDemo</string>
     <string name="one_time_request">One Time Request</string>
     <string name="periodic_request">Periodic Request</string>
+    <string name="task_enqueued">Task enqueued.</string>
+    <string name="task_blocked">Task blocked.</string>
+    <string name="task_running">Task running.</string>
+    <string name="task_default">Task state else part.</string>
+    <string name="task_succeeded">Task successful.</string>
+    <string name="task_failed">Task Failed.</string>
+    <string name="task_cancelled">Task cancelled.</string>
+    <string name="task_default_finished">Task state isFinished else part.</string>
 </resources>
