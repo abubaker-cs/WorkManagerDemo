@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // TODO - We will put the code in normal projects, which we want to execute, i.e. downloading...
+
         // Event: One Time Request
         binding.btnOneTimeRequest.setOnClickListener {
 
@@ -34,6 +36,9 @@ class MainActivity : AppCompatActivity() {
              * 5. Storage Not Low
              *
              */
+
+
+            // -------------------------------- CONFIGURATION --------------------------------
 
 
             /**
@@ -53,10 +58,15 @@ class MainActivity : AppCompatActivity() {
                 // Due to our two defined constraints, this request will only work if those requirements are met.
                 .build()
 
+
             // Define the input data for work manager
             // A persistable set of key/value pairs which are used as inputs and outputs for ListenableWorkers.
             val data = Data.Builder()
             data.putString("inputKey", "Input Value")
+
+
+            // -------------------------------- ONE TIME REQUEST --------------------------------
+
 
             /**
              * A WorkRequest for non-repeating work.
@@ -71,44 +81,63 @@ class MainActivity : AppCompatActivity() {
                  * @param - key/value pairs that will be provided to the worker
                  */
                 .setInputData(data.build())
-                /**
-                 * Adds constraints to the WorkRequest.
-                 */
+
+                // Adds constraints to the WorkRequest.
                 .setConstraints(oneTimeRequestConstraints)
+
                 // Builds a {@link WorkRequest} based on this {@link Builder}
                 .build()
 
+
+            // ------
+
+            // Enqueue for background Processing.
             // Retrieves the default singleton instance of WorkManager and Enqueues one item for background processing.
             WorkManager.getInstance(this@MainActivity).enqueue((sampleWork))
 
             // Gets a LiveData of the WorkInfo for a given work id.
+            // sampleWork.id = Gets the unique identifier associated with this unit of work.
             WorkManager.getInstance(this@MainActivity).getWorkInfoByIdLiveData(sampleWork.id)
                 .observe(this, { workInfo ->
 
+                    // It will execute the companion object "logger" in OneTimeRequestWorker.kt file
                     OneTimeRequestWorker.Companion.logger(workInfo.state.name)
 
-                    //
+                    // If the workInfo is not null:
                     if (workInfo != null) {
                         when (workInfo.state) {
+
+                            // Enqueued
                             State.ENQUEUED -> {
                                 // Show the work state in text view
                                 binding.tvOneTimeRequest.text = getString(R.string.task_enqueued)
                             }
+
+                            // Blocked
                             State.BLOCKED -> {
                                 binding.tvOneTimeRequest.text = getString(R.string.task_blocked)
                             }
+
+                            // Running
                             State.RUNNING -> {
                                 binding.tvOneTimeRequest.text = getString(R.string.task_running)
                             }
+
+                            // Else:
                             else -> {
                                 binding.tvOneTimeRequest.text = getString(R.string.task_default)
                             }
+
                         }
                     }
 
-                    // When work finished
+                    // When the WorkInfo is not null and work is finished:
                     if (workInfo != null && workInfo.state.isFinished) {
+
+                        // Conditional:
                         when (workInfo.state) {
+
+                            // Succeeded
                             State.SUCCEEDED -> {
                                 binding.tvOneTimeRequest.text = getString(R.string.task_succeeded)
 
@@ -116,23 +145,34 @@ class MainActivity : AppCompatActivity() {
                                 val successOutputData = workInfo.outputData
                                 val outputText = successOutputData.getString("outputKey")
                                 Log.i("Worker Output", "$outputText")
+
                             }
+
+                            // Failed
                             State.FAILED -> {
                                 binding.tvOneTimeRequest.text = getString(R.string.task_failed)
                             }
+
+                            // Canceled
                             State.CANCELLED -> {
                                 binding.tvOneTimeRequest.text = getString(R.string.task_cancelled)
                             }
+
+                            // Default:
                             else -> {
                                 binding.tvOneTimeRequest.text =
                                     getString(R.string.task_default_finished)
                             }
+
                         }
                     }
                 })
         }
 
-        // Periodic Work Request
+        // -------------------------------- PERIODIC WORK Request --------------------------------
+        /**
+         * Periodic Work Request
+         */
         binding.btnPeriodicRequest.setOnClickListener {
 
             /**
